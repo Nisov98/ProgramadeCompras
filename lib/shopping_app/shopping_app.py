@@ -18,8 +18,14 @@ for i in range(10):
 print("🤖 あなたの名前を教えてください")
 customer = Customer(input())
 
-print("🏧 ウォレットにチャージする金額を入力にしてください")
-customer.wallet.deposit(int(input()))
+# Validación para asegurarse de que se ingrese un valor numérico
+while True:
+    wallet_balance_input = input("🏧 ウォレットにチャージする金額を入力にしてください: ")
+    if wallet_balance_input.strip().isdigit():
+        customer.wallet.deposit(int(wallet_balance_input))
+        break
+    else:
+        print("⚠️ 金額は数字で入力してください")
 
 print("🛍️ ショッピングを開始します")
 end_shopping = False
@@ -61,3 +67,4 @@ customer.cart.show_items()
 print(f"🌚 合計金額: {customer.cart.total_amount()}")
 
 print("🎉 終了")
+

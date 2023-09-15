@@ -1,7 +1,9 @@
-class Wallet:
+from ownable import Ownable
+
+class Wallet(Ownable):
 
     def __init__(self, owner):
-        self.set_owner(owner)
+        super().__init__(owner)
         self.balance = 0
 
     def deposit(self, amount):
@@ -12,3 +14,4 @@ class Wallet:
             return
         self.balance -= int(amount)
         return amount
+

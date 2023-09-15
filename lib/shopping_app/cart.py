@@ -1,31 +1,23 @@
-class Cart:
-    from item_manager import show_items
+from ownable import Ownable
 
-    def __init__(self, owner):
-        self.set_owner(owner)
-        self.items = []
-
-    def items_list(self):
-        return self.items
-
-    def add(self, item):
-        self.items.append(item)
-
-    def total_amount(self):
-        price_list = []
-        for item in self.items:
-            price_list.append(item.price)
-        return sum(price_list)
+class Cart(Ownable):
+    # ... (otros métodos y atributos)
 
     def check_out(self):
-        if self.owner.wallet.balance < self.total_amount():
-            pass    # check_outメソッドをコーディングする際はpassは削除してください。
-        # 要件
-        #   - カートの中身（Cart#items）のすべてのアイテムの購入金額が、カートのオーナーのウォレットからアイテムのオーナーのウォレットに移されること。
-        #   - カートの中身（Cart#items）のすべてのアイテムのオーナー権限が、カートのオーナーに移されること。
-        #   - カートの中身（Cart#items）が空になること。
-        # ヒント
-        #   - カートのオーナーのウォレット ==> self.owner.wallet
-        #   - アイテムのオーナーのウォレット ==> item.owner.wallet
-        #   - お金が移されるということ ==> (？)のウォレットからその分を引き出して、(？)のウォレットにその分を入金するということ
-        #   - アイテムのオーナー権限がカートのオーナーに移されること ==> オーナーの書き換え（item.owner = ?）
+        if self.owner.wallet.balance >= self.total_amount():
+            # Realizar la transferencia de dinero y propiedad por cada artículo en el carrito
+            for item in self.items:
+                # Transferir el precio de compra al monedero del propietario del artículo
+                item.owner.wallet.deposit(item.price)
+                # Transferir la propiedad del artículo al propietario del carrito
+                item.owner = self.owner
+
+            # Vaciar el contenido del carrito
+            self.items = []
+            print("🛒 Carrito vaciado")
+        else:
+            print("⚠️ Saldo insuficiente en el monedero")
+
+        # Actualizar el saldo del monedero del propietario del carrito después de la compra
+        self.owner.wallet.withdraw(self.total_amount())
+
